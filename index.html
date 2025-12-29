@@ -1,362 +1,391 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
-    <title>THỎ FRUITS</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công Nợ Nhân Viên</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #e6e7eb, #1ef7ec);
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .1);
+            overflow: hidden
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin: 0
+        }
+
+        .main {
+            padding: 30px
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px
+        }
+
+        .section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333
+        }
+
+        .input-group {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            margin-bottom: 15px
         }
 
-        .box {
-            background: #ffffff;
-            padding: 25px;
-            width: 500px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-            position: relative;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 16px;
-            color: #4b1cce;
-            letter-spacing: 2px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            color: #fff;
-        }
-
-        .add { background: #28a745; }
-        .redeem { background: #ff9800; }
-        .reset { background: #dc3545; }
-
-        .info {
-            margin-top: 10px;
-            background: #f1f1f1;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .list {
-            margin-top: 10px;
-            max-height: 160px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .list div {
-            padding: 6px;
-            cursor: pointer;
-        }
-
-        .list div:hover {
-            background: #eee;
-        }
-
-        .suggestions {
-            position: absolute;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            max-height: 150px;
-            overflow-y: auto;
-            display: none;
-            width: calc(100% - 50px);
-            z-index: 10;
-        }
-
-        .suggestions div {
-            padding: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .suggestions div:hover {
-            background: #f1f1f1;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 8px;
-            font-size: 13px;
-            color: #777;
-        }
-
-        /* ===== KHUNG NHẬP BÊN PHẢI ===== */
-        .import-box {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #ffffff;
-            padding: 15px;
-            width: 280px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        }
-
-        .import-box h4 {
-            text-align: center;
-            color: #6f42c1;
+        .input-group label {
+            font-weight: 600;
             margin-bottom: 8px;
+            color: #333
         }
 
-        .import-btn {
-            background: #6f42c1;
+        .input-group input,
+        .input-group select {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: .3s
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, .1)
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            width: fit-content;
+            margin-top: 10px
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            color: white
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .2)
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            margin-left: 10px
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .2)
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: white;
+            border-left: 5px solid #4facfe;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .05)
+        }
+
+        .history-item.pay {
+            border-left-color: #27ae60
+        }
+
+        .history-item.debt {
+            border-left-color: #e74c3c
+        }
+
+        .history-info p {
+            margin: 2px 0;
+            font-size: .9em;
+            color: #555
+        }
+
+        .history-amount.pay {
+            color: #27ae60;
+            font-weight: bold
+        }
+
+        .history-amount.debt {
+            color: #e74c3c;
+            font-weight: bold
+        }
+
+        .total-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .1)
+        }
+
+        .total-box h2 {
+            margin: 0 0 10px 0
+        }
+
+        .total-amount {
+            font-size: 2em;
+            font-weight: bold
+        }
+
+        .total-amount.neg {
+            color: #e74c3c
+        }
+
+        .total-amount.pos {
+            color: #27ae60
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: .8em
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .1)
+        }
+
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: .2s
+        }
+
+        .autocomplete-item:hover {
+            background: #f0f0f0
+        }
+
+        .autocomplete-item:last-child {
+            border: none
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #4facfe
+        }
+
+        @media(max-width:768px) {
+            .btn {
+                width: 100%
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="box">
-    <h2><b><i>🍓 THỎ FRUITS 🍓</i></b></h2>
+    <div class="container">
+        <div class="header">
+            <h1>📒 Công Nợ Nhân Viên</h1>
+            <p>Ghi rõ tiền trả & tiền nợ mỗi ngày</p>
+        </div>
 
-    <input type="text" id="phone" placeholder="Nhập số điện thoại">
-    <div class="suggestions" id="suggestions"></div>
+        <div class="main">
+            <!-- Form nhập -->
+            <div class="section">
+                <h3>Thêm giao dịch</h3>
+                <div class="input-group">
+                    <label>Tên nhân viên <span style="color:red">*</span>:</label>
+                    <input type="text" id="employeeName" placeholder="Nhập tên nhân viên" autocomplete="off">
+                    <div class="autocomplete-dropdown" id="employeeAutocomplete"></div>
+                </div>
+                <div class="input-group">
+                    <label>Ngày <span style="color:red">*</span>:</label>
+                    <input type="date" id="transactionDate">
+                </div>
+                <div class="input-group">
+                    <label>Loại <span style="color:red">*</span>:</label>
+                    <select id="transactionType">
+                        <option value="pay">Trả tiền</option>
+                        <option value="debt">Nợ thêm</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Số tiền (VNĐ) <span style="color:red">*</span>:</label>
+                    <input type="number" id="transactionAmount" placeholder="Nhập số tiền" min="0">
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn btn-save" onclick="saveTransaction()">✅ Lưu giao dịch</button>
+                    <!-- ★★★ NÚT XÓA TOÀN BỘ DỮ LIỆU ★★★ -->
+                    <button class="btn btn-danger" onclick="resetAllData()">🗑️ Xóa toàn bộ dữ liệu</button>
+                </div>
+            </div>
 
-    <input type="number" id="money" placeholder="Nhập số tiền (100 = 1 điểm)">
-    <input type="number" id="redeemAmount" placeholder="Số điểm muốn trừ">
+            <!-- Tổng nợ -->
+            <div class="section total-box">
+                <h2>Tổng nợ còn lại</h2>
+                <div id="totalDebt" class="total-amount pos">0 VNĐ</div>
+            </div>
 
-    <button class="add" onclick="addPoints()">➕ Cộng điểm</button>
-    <button class="redeem" onclick="redeemPoints()">🎁 Trừ điểm</button>
-
-    <button class="reset" onclick="resetPoints()">♻ Reset điểm khách</button>
-    <button class="reset" onclick="deleteCustomer()">❌ Xóa khách này</button>
-
-    <input type="password" id="adminPass" placeholder="Mật khẩu admin reset toàn bộ">
-    <button class="reset" onclick="resetAllCustomers()">🗑 Reset TOÀN BỘ danh sách</button>
-
-    <div class="info">
-        Điểm hiện tại: <span id="points">0</span>
+            <!-- Lịch sử -->
+            <div class="section">
+                <h3>Lịch sử công nợ</h3>
+                <div id="historyList" class="history-list"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="info">
-        Tổng khách hàng: <span id="totalCustomers">0</span>
-    </div>
+    <script>
+        /* ---------- BIẾN TOÀN CỤC ---------- */
+        let debts = JSON.parse(localStorage.getItem('debtsNV')) || []; // {id,employeeName,date,type,amount,time}
 
-    <div class="list" id="customerList"></div>
+        /* ---------- KHỞI ĐỘNG ---------- */
+        document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+        renderAll();
 
-    <div class="footer">
-        Hệ thống tích điểm – THỎ FRUITS
-    </div>
-</div>
-
-<!-- ===== NHẬP THEO ĐỊNH DẠNG 📱 SDT — ⭐ ĐIỂM ===== -->
-<div class="import-box">
-    <h4>📥 Dán dữ liệu</h4>
-    <textarea id="importData" rows="7"
-        placeholder="📱 0374244904 — ⭐ 1 điểm&#10;📱 0987654321 — ⭐ 10 điểm"></textarea>
-    <button class="import-btn" onclick="importCustomers()">💾 Lưu vào danh sách</button>
-</div>
-
-<script>
-/* ========== CONFIG ========== */
-const ADMIN_PASSWORD = "0965579926";
-
-/* ========== DATA ========== */
-let customers = localStorage.getItem("customers")
-    ? JSON.parse(localStorage.getItem("customers"))
-    : {};
-
-/* ========== UTILS ========== */
-function isValidPhone(phone) {
-    return /^\d{10}$/.test(phone);
-}
-
-/* ========== UI ========== */
-function updateUI() {
-    let list = document.getElementById("customerList");
-    list.innerHTML = "";
-
-    let count = 0;
-    for (let phone in customers) {
-        count++;
-        list.innerHTML += `
-            <div onclick="selectPhone('${phone}')">
-                📱 ${phone} — ⭐ ${customers[phone]} điểm
-            </div>`;
-    }
-
-    document.getElementById("totalCustomers").innerText = count;
-}
-
-function selectPhone(phone) {
-    document.getElementById("phone").value = phone;
-    document.getElementById("points").innerText = customers[phone];
-    document.getElementById("suggestions").style.display = "none";
-}
-
-/* ========== LOGIC GỐC ========== */
-function addPoints() {
-    let phone = document.getElementById("phone").value.trim();
-    let money = parseInt(document.getElementById("money").value);
-
-    if (!isValidPhone(phone)) return alert("❌ Số điện thoại không hợp lệ!");
-    if (!money || money <= 0) return alert("❌ Số tiền không hợp lệ!");
-
-    if (!customers[phone]) customers[phone] = 0;
-
-    let earned = Math.floor(money / 100);
-    customers[phone] += earned;
-
-    save(phone);
-    alert("✅ Đã cộng " + earned + " điểm");
-    document.getElementById("money").value = "";
-}
-
-function redeemPoints() {
-    let phone = document.getElementById("phone").value.trim();
-    let amount = parseInt(document.getElementById("redeemAmount").value);
-
-    if (!customers[phone]) return alert("❌ Không tìm thấy khách!");
-    if (!amount || amount <= 0) return alert("❌ Nhập số điểm muốn trừ!");
-    if (customers[phone] < amount) return alert("❌ Không đủ điểm!");
-
-    customers[phone] -= amount;
-    save(phone);
-    alert("🎁 Đã trừ " + amount + " điểm");
-    document.getElementById("redeemAmount").value = "";
-}
-
-function resetPoints() {
-    let phone = document.getElementById("phone").value.trim();
-    if (!customers[phone]) return alert("❌ Không tìm thấy khách!");
-
-    if (confirm("RESET điểm khách này?")) {
-        customers[phone] = 0;
-        save(phone);
-    }
-}
-
-function deleteCustomer() {
-    let phone = document.getElementById("phone").value.trim();
-    if (!customers[phone]) return alert("❌ Không tìm thấy khách!");
-
-    if (!confirm("⚠️ Xóa khách này?")) return;
-    delete customers[phone];
-
-    localStorage.setItem("customers", JSON.stringify(customers));
-    document.getElementById("phone").value = "";
-    document.getElementById("points").innerText = 0;
-
-    updateUI();
-    alert("✅ Đã xóa khách!");
-}
-
-function resetAllCustomers() {
-    let pass = document.getElementById("adminPass").value;
-    if (pass !== ADMIN_PASSWORD) return alert("❌ Sai mật khẩu!");
-
-    if (!confirm("⚠️ Xóa TOÀN BỘ danh sách?")) return;
-
-    customers = {};
-    localStorage.removeItem("customers");
-
-    document.getElementById("phone").value = "";
-    document.getElementById("points").innerText = 0;
-    document.getElementById("adminPass").value = "";
-
-    updateUI();
-    alert("🗑 Đã reset toàn bộ!");
-}
-
-function save(phone) {
-    localStorage.setItem("customers", JSON.stringify(customers));
-    document.getElementById("points").innerText = customers[phone];
-    updateUI();
-}
-
-/* ===== IMPORT ĐỊNH DẠNG 📱 SDT — ⭐ ĐIỂM ===== */
-function importCustomers() {
-    let text = document.getElementById("importData").value.trim();
-    if (!text) return alert("❌ Chưa nhập dữ liệu!");
-
-    let lines = text.split("\n");
-    let added = 0;
-
-    lines.forEach(line => {
-        let match = line.match(/📱\s*(\d{10})\s*—\s*⭐\s*(\d+)\s*điểm/i);
-        if (!match) return;
-
-        let phone = match[1];
-        let point = parseInt(match[2]);
-
-        if (isValidPhone(phone)) {
-            customers[phone] = point;
-            added++;
+        /* ---------- TIỆN ÍCH ---------- */
+        function formatCurrency(n) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Math.abs(n));
         }
-    });
-
-    localStorage.setItem("customers", JSON.stringify(customers));
-    updateUI();
-    document.getElementById("importData").value = "";
-
-    alert("✅ Đã lưu " + added + " khách vào danh sách!");
-}
-
-/* ========== EVENTS ========== */
-document.getElementById("phone").addEventListener("input", function () {
-    let value = this.value.trim();
-    let suggestions = document.getElementById("suggestions");
-    suggestions.innerHTML = "";
-
-    document.getElementById("points").innerText =
-        customers[value] ? customers[value] : 0;
-
-    if (value.length < 3) {
-        suggestions.style.display = "none";
-        return;
-    }
-
-    for (let phone in customers) {
-        if (phone.includes(value)) {
-            let div = document.createElement("div");
-            div.innerHTML = `📱 <b>${phone}</b> — ⭐ ${customers[phone]} điểm`;
-            div.onclick = () => selectPhone(phone);
-            suggestions.appendChild(div);
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
         }
-    }
 
-    suggestions.style.display =
-        suggestions.innerHTML === "" ? "none" : "block";
-});
+        /* ---------- LƯU GIAO DỊCH ---------- */
+        function saveTransaction() {
+            const name = document.getElementById('employeeName').value.trim();
+            const date = document.getElementById('transactionDate').value;
+            const type = document.getElementById('transactionType').value;
+            const amt = parseInt(document.getElementById('transactionAmount').value) || 0;
+            if (!name || !date || amt <= 0) { alert('❌ Vui lòng điền đầy đủ!'); return; }
+            const t = {
+                id: Date.now(),
+                employeeName: name,
+                date: date,
+                type: type, // "pay" or "debt"
+                amount: amt,
+                time: new Date().toLocaleTimeString('vi-VN')
+            };
+            debts.unshift(t);
+            localStorage.setItem('debtsNV', JSON.stringify(debts));
+            renderAll();
+            clearForm();
+            alert('✅ Đã lưu!');
+        }
+        function clearForm() {
+            document.getElementById('employeeName').value = '';
+            document.getElementById('transactionAmount').value = '';
+        }
 
-/* ========== INIT ========== */
-updateUI();
-</script>
+        /* ---------- XÓA TOÀN BỘ DỮ LIỆU ---------- */
+        function resetAllData() {
+            if (!confirm('🗑️ Bạn có chắc chắn muốn xóa toàn bộ dữ liệu? Hành động này không thể hoàn tác!')) return;
+            localStorage.removeItem('debtsNV');
+            localStorage.removeItem('employeeListDebt');
+            debts = [];
+            renderAll();
+            alert('✅ Đã xóa sạch dữ liệu!');
+        }
 
+        /* ---------- HIỂN THỊ ---------- */
+        function renderAll() {
+            // Tính tổng nợ
+            const total = debts.reduce((s, t) => s + (t.type === 'debt' ? t.amount : -t.amount), 0);
+            const totalBox = document.getElementById('totalDebt');
+            totalBox.textContent = (total < 0 ? '-' : '') + formatCurrency(Math.abs(total));
+            totalBox.className = 'total-amount ' + (total < 0 ? 'neg' : 'pos');
+
+            // Hiển thị lịch sử
+            const box = document.getElementById('historyList');
+            if (!debts.length) { box.innerHTML = '<div style="text-align:center;color:#7f8c8d;">Chưa có giao dịch nào!</div>'; return; }
+            let html = '';
+            debts.sort((a, b) => b.id - a.id).forEach(t => {
+                const sign = t.type === 'debt' ? '+' : '-';
+                const cls = t.type === 'debt' ? 'debt' : 'pay';
+                html += `
+      <div class="history-item ${cls}">
+        <div class="history-info">
+          <strong>${t.employeeName}</strong>
+          <p>${t.type === 'debt' ? 'Nợ thêm' : 'Trả tiền'} · ${t.date} · ${t.time}</p>
+        </div>
+        <div class="history-amount ${cls}">${sign}${formatCurrency(t.amount)}</div>
+      </div>`;
+            });
+            box.innerHTML = html;
+        }
+
+        /* ---------- AUTO COMPLETE ---------- */
+        function getEmployeeList() {
+            const list = [...new Set(debts.map(d => d.employeeName).filter(Boolean))];
+            localStorage.setItem('employeeListDebt', JSON.stringify(list));
+            return list;
+        }
+        function filterEmployees(s) {
+            const list = JSON.parse(localStorage.getItem('employeeListDebt')) || [];
+            return list.filter(n => n.toLowerCase().includes(s.toLowerCase())).slice(0, 10);
+        }
+        function showAutocomplete(dropdownId, items, searchTerm, inputId) {
+            const dropdown = document.getElementById(dropdownId), input = document.getElementById(inputId);
+            dropdown.innerHTML = '';
+            if (!items.length || searchTerm.length < 1) { dropdown.style.display = 'none'; return; }
+            items.forEach((it, idx) => {
+                const div = document.createElement('div'); div.className = 'autocomplete-item'; div.setAttribute('data-index', idx);
+                div.innerHTML = it.replace(new RegExp(`(${searchTerm})`, 'gi'), '<span class="highlight">$1</span>');
+                div.onclick = () => { input.value = it; dropdown.style.display = 'none'; };
+                dropdown.appendChild(div);
+            });
+            dropdown.style.display = 'block';
+        }
+        document.getElementById('employeeName').addEventListener('input', function () {
+            const s = this.value.trim(); const f = filterEmployees(s); showAutocomplete('employeeAutocomplete', f, s, 'employeeName');
+        });
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.input-group')) document.getElementById('employeeAutocomplete').style.display = 'none';
+        });
+    </script>
 </body>
 </html>
-
-
-
