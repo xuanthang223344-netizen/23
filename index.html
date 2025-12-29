@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>THỎ FRUITS</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e6e7eb, #1ef7ec);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            background: #ffffff;
+            padding: 25px;
+            width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            position: relative;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 16px;
+            color: #4b1cce;
+            letter-spacing: 2px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .add { background: #28a745; }
+        .redeem { background: #ff9800; }
+        .reset { background: #dc3545; }
+
+        .info {
+            margin-top: 10px;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .list {
+            margin-top: 10px;
+            max-height: 160px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .list div {
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        .list div:hover {
+            background: #eee;
+        }
+
+        .suggestions {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            width: calc(100% - 50px);
+            z-index: 10;
+        }
+
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .suggestions div:hover {
+            background: #f1f1f1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        /* ===== KHUNG NHẬP BÊN PHẢI ===== */
+        .import-box {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            padding: 15px;
+            width: 280px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+
+        .import-box h4 {
+            text-align: center;
+            color: #6f42c1;
+            margin-bottom: 8px;
+        }
+
+        .import-btn {
+            background: #6f42c1;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2><b><i>🍓 THỎ FRUITS 🍓</i></b></h2>
+
+    <input type="text" id="phone" placeholder="Nhập số điện thoại">
+    <div class="suggestions" id="suggestions"></div>
+
+    <input type="number" id="money" placeholder="Nhập số tiền (100 = 1 điểm)">
+    <input type="number" id="redeemAmount" placeholder="Số điểm muốn trừ">
+
+    <button class="add" onclick="addPoints()">➕ Cộng điểm</button>
+    <button class="redeem" onclick="redeemPoints()">🎁 Trừ điểm</button>
+
+    <button class="reset" onclick="resetPoints()">♻ Reset điểm khách</button>
+    <button class="reset" onclick="deleteCustomer()">❌ Xóa khách này</button>
+
+    <input type="password" id="adminPass" placeholder="Mật khẩu admin reset toàn bộ">
+    <button class="reset" onclick="resetAllCustomers()">🗑 Reset TOÀN BỘ danh sách</button>
+
+    <div class="info">
+        Điểm hiện tại: <span id="points">0</span>
+    </div>
+
+    <div class="info">
+        Tổng khách hàng: <span id="totalCustomers">0</span>
+    </div>
+
+    <div class="list" id="customerList"></div>
+
+    <div class="footer">
+        Hệ thống tích điểm – THỎ FRUITS
+    </div>
+</div>
+
+<!-- ===== NHẬP THEO ĐỊNH DẠNG 📱 SDT — ⭐ ĐIỂM ===== -->
+<div class="import-box">
+    <h4>📥 Dán dữ liệu</h4>
+    <textarea id="importData" rows="7"
+        placeholder="📱 0374244904 — ⭐ 1 điểm&#10;📱 0987654321 — ⭐ 10 điểm"></textarea>
+    <button class="import-btn" onclick="importCustomers()">💾 Lưu vào danh sách</button>
+</div>
+
+<script>
+/* ========== CONFIG ========== */
+const ADMIN_PASSWORD = "0965579926";
+
+/* ========== DATA ========== */
+let customers = localStorage.getItem("customers")
+    ? JSON.parse(localStorage.getItem("customers"))
+    : {};
+
+/* ========== UTILS ========== */
+function isValidPhone(phone) {
+    return /^\d{10}$/.test(phone);
+}
+
+/* ========== UI ========== */
+function updateUI() {
+    let list = document.getElementById("customerList");
+    list.innerHTML = "";
+
+    let count = 0;
+    for (let phone in customers) {
+        count++;
+        list.innerHTML += `
+            <div onclick="selectPhone('${phone}')">
+                📱 ${phone} — ⭐ ${customers[phone]} điểm
+            </div>`;
+    }
+
+    document.getElementById("totalCustomers").innerText = count;
+}
+
+function selectPhone(phone) {
+    document.getElementById("phone").value = phone;
+    document.getElementById("points").innerText = customers[phone];
+    document.getElementById("suggestions").style.display = "none";
+}
+
+/* ========== LOGIC GỐC ========== */
+function addPoints() {
+    let phone = document.getElementById("phone").value.trim();
+    let money = parseInt(document.getElementById("money").value);
+
+    if (!isValidPhone(phone)) return alert("❌ Số điện thoại không hợp lệ!");
+    if (!money || money <= 0) return alert("❌ Số tiền không hợp lệ!");
+
+    if (!customers[phone]) customers[phone] = 0;
+
+    let earned = Math.floor(money / 100);
+    customers[phone] += earned;
+
+    save(phone);
+    alert("✅ Đã cộng " + earned + " điểm");
+    document.getElementById("money").value = "";
+}
+
+function redeemPoints() {
+    let phone = document.getElementById("phone").value.trim();
+    let amount = parseInt(document.getElementById("redeemAmount").value);
+
+    if (!customers[phone]) return alert("❌ Không tìm thấy khách!");
+    if (!amount || amount <= 0) return alert("❌ Nhập số điểm muốn trừ!");
+    if (customers[phone] < amount) return alert("❌ Không đủ điểm!");
+
+    customers[phone] -= amount;
+    save(phone);
+    alert("🎁 Đã trừ " + amount + " điểm");
+    document.getElementById("redeemAmount").value = "";
+}
+
+function resetPoints() {
+    let phone = document.getElementById("phone").value.trim();
+    if (!customers[phone]) return alert("❌ Không tìm thấy khách!");
+
+    if (confirm("RESET điểm khách này?")) {
+        customers[phone] = 0;
+        save(phone);
+    }
+}
+
+function deleteCustomer() {
+    let phone = document.getElementById("phone").value.trim();
+    if (!customers[phone]) return alert("❌ Không tìm thấy khách!");
+
+    if (!confirm("⚠️ Xóa khách này?")) return;
+    delete customers[phone];
+
+    localStorage.setItem("customers", JSON.stringify(customers));
+    document.getElementById("phone").value = "";
+    document.getElementById("points").innerText = 0;
+
+    updateUI();
+    alert("✅ Đã xóa khách!");
+}
+
+function resetAllCustomers() {
+    let pass = document.getElementById("adminPass").value;
+    if (pass !== ADMIN_PASSWORD) return alert("❌ Sai mật khẩu!");
+
+    if (!confirm("⚠️ Xóa TOÀN BỘ danh sách?")) return;
+
+    customers = {};
+    localStorage.removeItem("customers");
+
+    document.getElementById("phone").value = "";
+    document.getElementById("points").innerText = 0;
+    document.getElementById("adminPass").value = "";
+
+    updateUI();
+    alert("🗑 Đã reset toàn bộ!");
+}
+
+function save(phone) {
+    localStorage.setItem("customers", JSON.stringify(customers));
+    document.getElementById("points").innerText = customers[phone];
+    updateUI();
+}
+
+/* ===== IMPORT ĐỊNH DẠNG 📱 SDT — ⭐ ĐIỂM ===== */
+function importCustomers() {
+    let text = document.getElementById("importData").value.trim();
+    if (!text) return alert("❌ Chưa nhập dữ liệu!");
+
+    let lines = text.split("\n");
+    let added = 0;
+
+    lines.forEach(line => {
+        let match = line.match(/📱\s*(\d{10})\s*—\s*⭐\s*(\d+)\s*điểm/i);
+        if (!match) return;
+
+        let phone = match[1];
+        let point = parseInt(match[2]);
+
+        if (isValidPhone(phone)) {
+            customers[phone] = point;
+            added++;
+        }
+    });
+
+    localStorage.setItem("customers", JSON.stringify(customers));
+    updateUI();
+    document.getElementById("importData").value = "";
+
+    alert("✅ Đã lưu " + added + " khách vào danh sách!");
+}
+
+/* ========== EVENTS ========== */
+document.getElementById("phone").addEventListener("input", function () {
+    let value = this.value.trim();
+    let suggestions = document.getElementById("suggestions");
+    suggestions.innerHTML = "";
+
+    document.getElementById("points").innerText =
+        customers[value] ? customers[value] : 0;
+
+    if (value.length < 3) {
+        suggestions.style.display = "none";
+        return;
+    }
+
+    for (let phone in customers) {
+        if (phone.includes(value)) {
+            let div = document.createElement("div");
+            div.innerHTML = `📱 <b>${phone}</b> — ⭐ ${customers[phone]} điểm`;
+            div.onclick = () => selectPhone(phone);
+            suggestions.appendChild(div);
+        }
+    }
+
+    suggestions.style.display =
+        suggestions.innerHTML === "" ? "none" : "block";
+});
+
+/* ========== INIT ========== */
+updateUI();
+</script>
+
+</body>
+</html>
+
+
+
